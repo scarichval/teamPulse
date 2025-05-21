@@ -9,12 +9,12 @@ console.log(`authHeader: ${authHeader}`);
 
     try {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(`decodedToken: ${decodedToken}`);    
+    console.log('decodedToken:', decodedToken); // avoids [object Object]    
         req.user = decodedToken;
+        next();
     } catch (error) {
         return res.status(403).json({error: 'Invalid token'});
     }    
-
 }
 
 module.exports = verifyToken;
