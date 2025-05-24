@@ -24,6 +24,15 @@ export default function TaskPage() {
     fetchTasks();
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await API.delete(`/tasks/${id}`);
+      fetchTasks();
+    } catch (error) {
+      alert("Failed to delete tasks");
+    }
+  }
+
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -54,8 +63,16 @@ export default function TaskPage() {
             key={task._id}
             className="border p-3 rounded flex justify-between"
           >
-            <span>{task.title}</span>
-            <span className="text-sm text-gray-500">{task.status}</span>
+            <div>
+              <div className="font-semibold">{task.title}</div>
+              <div className="text-sm text-gray-500">{task.status}</div>
+            </div>
+            <button
+              onClick={() => handleDelete(task._id)}
+              className="text-red-500 text-sm hover:underline"
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
