@@ -31,7 +31,19 @@ export default function TaskPage() {
     } catch (error) {
       alert("Failed to delete tasks");
     }
-  }
+  };
+
+  const handleToggleStatus = async (task) => {
+    const next =
+      task.status === "todo"
+        ? "in progress"
+        : task.status === "in progress"
+        ? "done"
+        : "todo";
+
+    await API.put(`/tasks/${task._id}`, { status: next });
+    fetchTasks();
+  };
 
   useEffect(() => {
     fetchTasks();
@@ -61,18 +73,30 @@ export default function TaskPage() {
         {tasks.map((task) => (
           <li
             key={task._id}
-            className="border p-3 rounded flex justify-between"
+            className="border p-4 rounded flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition"
           >
+            {/* Task content */}
             <div>
-              <div className="font-semibold">{task.title}</div>
-              <div className="text-sm text-gray-500">{task.status}</div>
+              <div className="font-medium text-lg">{task.title}</div>
+              <div className="text-sm text-gray-500">Status: {task.status}</div>
             </div>
-            <button
-              onClick={() => handleDelete(task._id)}
-              className="text-red-500 text-sm hover:underline"
-            >
-              Delete
-            </button>
+
+            {/* Actions */}
+            <div className="flex gap-4">
+              <button
+                onClick={() => handleToggleStatus(task)}
+                className="text-sm text-blue-600 hover:underline"
+              >
+                {/* Update */}
+                {task.status}
+              </button>
+              <button
+                onClick={() => handleDelete(task._id)}
+                className="text-sm text-red-500 hover:underline"
+              >
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
